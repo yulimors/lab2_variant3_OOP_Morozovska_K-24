@@ -1,4 +1,4 @@
-﻿using System.Collections.ObjectModel;
+using System.Collections.ObjectModel;
 using System.Windows.Input;
 using System.Xml.Xsl;
 using Lab2Xml.Models;
@@ -12,33 +12,53 @@ namespace Lab2Xml.ViewModels
         private string _xslPath = string.Empty;
 
         private string _keywordName = string.Empty;
-        private string? _selectedFaculty = null;
-        private string? _selectedCourse = null;
+        private string _selectedFaculty = null;
+        private string _selectedCourse = null;
         private string _selectedStrategyName = "LINQ to XML";
 
         private string _statusMessage = "Готовий до роботи";
         private Color _statusColor = Colors.Gray;
+        private bool _isClearEnabled = false;
 
         public ObservableCollection<Student> Results { get; set; } = new();
         public ObservableCollection<string> Faculties { get; set; } = new();
         public ObservableCollection<string> Courses { get; set; } = new();
         public ObservableCollection<string> Strategies { get; set; } = new() { "SAX API", "DOM API", "LINQ to XML" };
 
+
         public string KeywordName
         {
             get => _keywordName;
-            set { _keywordName = value ?? string.Empty; OnPropertyChanged(); }
+            set
+            {
+                _keywordName = value ?? string.Empty;
+                OnPropertyChanged();
+                UpdateButtonState();
+            }
         }
+
         public string SelectedFaculty
         {
             get => _selectedFaculty;
-            set { _selectedFaculty = value; OnPropertyChanged(); }
+            set
+            {
+                _selectedFaculty = value;
+                OnPropertyChanged();
+                UpdateButtonState();
+            }
         }
+
         public string SelectedCourse
         {
             get => _selectedCourse;
-            set { _selectedCourse = value; OnPropertyChanged(); }
+            set
+            {
+                _selectedCourse = value;
+                OnPropertyChanged();
+                UpdateButtonState();
+            }
         }
+
         public string SelectedStrategyName
         {
             get => _selectedStrategyName;
@@ -57,6 +77,12 @@ namespace Lab2Xml.ViewModels
             set { _statusColor = value; OnPropertyChanged(); }
         }
 
+        public bool IsClearEnabled
+        {
+            get => _isClearEnabled;
+            set { _isClearEnabled = value; OnPropertyChanged(); }
+        }
+
         public ICommand SearchCommand { get; }
         public ICommand ClearCommand { get; }
         public ICommand TransformCommand { get; }
@@ -73,6 +99,16 @@ namespace Lab2Xml.ViewModels
             ExitCommand = new Command(async () => await PerformExit());
 
             Task.Run(async () => await LoadInitialData());
+        }
+
+        private void UpdateButtonState()
+        {
+            bool shouldEnable = !string.IsNullOrEmpty(KeywordName) ||
+                                SelectedFaculty != null ||
+                                SelectedCourse != null ||
+                                Results.Count > 0;
+
+            IsClearEnabled = shouldEnable;
         }
 
         private async Task LoadInitialData()
@@ -141,9 +177,11 @@ namespace Lab2Xml.ViewModels
                 foreach (var item in found) Results.Add(item);
 
                 if (found.Count == 0)
-                    SetStatus("За вашим запитом нічого не знайдено. Спробуйте ще раз", Colors.Red);
+                    SetStatus("За вашим запитом нічого не знайдено", Colors.Red);
                 else
                     SetStatus($"Знайдено студентів: {found.Count}", Colors.Green);
+
+                UpdateButtonState();
             }
             catch (Exception ex)
             {
@@ -158,7 +196,10 @@ namespace Lab2Xml.ViewModels
             SelectedCourse = null;
             Results.Clear();
             SetStatus("Фільтри очищено", Colors.Gray);
+
+            UpdateButtonState();
         }
+
 
         private async Task PerformTransform()
         {
@@ -169,11 +210,13 @@ namespace Lab2Xml.ViewModels
                 string htmlPath = Path.Combine(FileSystem.CacheDirectory, "report.html");
 
                 await Task.Run(() => xslCompiled.Transform(_xmlPath, htmlPath));
-
                 SetStatus("HTML успішно створено!", Colors.Green);
 
-                bool open = await Application.Current!.MainPage!.DisplayAlert("Успіх", "Відкрити звіт?", "Так", "Ні");
-                if (open) await Launcher.Default.OpenAsync(new OpenFileRequest("Звіт", new ReadOnlyFile(htmlPath)));
+                if (Application.Current?.MainPage != null)
+                {
+                    bool open = await Application.Current.MainPage.DisplayAlert("Успіх", "Відкрити звіт?", "Так", "Ні");
+                    if (open) await Launcher.Default.OpenAsync(new OpenFileRequest("Звіт", new ReadOnlyFile(htmlPath)));
+                }
             }
             catch (Exception ex)
             {
@@ -183,8 +226,11 @@ namespace Lab2Xml.ViewModels
 
         private async Task PerformExit()
         {
-            bool answer = await Application.Current!.MainPage!.DisplayAlert("Вихід", "Завершити роботу?", "Так", "Ні");
-            if (answer) Application.Current.Quit();
+            if (Application.Current?.MainPage != null)
+            {
+                bool answer = await Application.Current.MainPage.DisplayAlert("Вихід", "Завершити роботу?", "Так", "Ні");
+                if (answer) Application.Current.Quit();
+            }
         }
 
         private async Task<string> CopyResourceToFile(string filename)
@@ -192,11 +238,9 @@ namespace Lab2Xml.ViewModels
             try
             {
                 string targetFile = Path.Combine(FileSystem.CacheDirectory, filename);
-
                 using Stream stream = await FileSystem.OpenAppPackageFileAsync(filename);
                 using FileStream outputStream = File.Create(targetFile);
                 await stream.CopyToAsync(outputStream);
-
                 return targetFile;
             }
             catch { return string.Empty; }
