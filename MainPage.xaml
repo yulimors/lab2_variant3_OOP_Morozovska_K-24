@@ -1,0 +1,90 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:Lab2Xml.ViewModels"
+             x:Class="Lab2Xml.MainPage"
+             Title="Гуртожиток 16">
+
+    <ContentPage.BindingContext>
+        <vm:MainViewModel />
+    </ContentPage.BindingContext>
+
+    <Grid RowDefinitions="Auto, *, Auto" Padding="15" RowSpacing="10">
+
+        <VerticalStackLayout Grid.Row="0" Spacing="10">
+
+            <VerticalStackLayout>
+                <Label Text="Метод пошуку" FontSize="12" TextColor="Gray"/>
+                <Picker ItemsSource="{Binding Strategies}" 
+                        SelectedItem="{Binding SelectedStrategyName}" 
+                        Title="Оберіть метод"/>
+            </VerticalStackLayout>
+
+            <Grid ColumnDefinitions="2*, 1.5*, 1*" ColumnSpacing="10">
+                <VerticalStackLayout Grid.Column="0">
+                    <Label Text="Прізвище / Ім'я" FontSize="12" TextColor="Gray"/>
+                    <Entry Placeholder="Введіть пошук..." Text="{Binding KeywordName}" />
+                </VerticalStackLayout>
+
+                <VerticalStackLayout Grid.Column="1">
+                    <Label Text="Факультет" FontSize="12" TextColor="Gray"/>
+                    <Picker Title="Всі" ItemsSource="{Binding Faculties}" SelectedItem="{Binding SelectedFaculty}"/>
+                </VerticalStackLayout>
+
+                <VerticalStackLayout Grid.Column="2">
+                    <Label Text="Курс" FontSize="12" TextColor="Gray"/>
+                    <Picker Title="-" ItemsSource="{Binding Courses}" SelectedItem="{Binding SelectedCourse}"/>
+                </VerticalStackLayout>
+            </Grid>
+
+            <Grid ColumnDefinitions="*,*,*,*" ColumnSpacing="8" Margin="0,10,0,0">
+
+                <Button Grid.Column="0" Text="Пошук" Command="{Binding SearchCommand}" 
+                        BackgroundColor="#0056b3" TextColor="White" Padding="0" CornerRadius="5"/>
+
+                <Button Grid.Column="1" Text="Очистити" Command="{Binding ClearCommand}" 
+                        BackgroundColor="#0056b3" TextColor="White" Padding="0" CornerRadius="5"/>
+
+                <Button Grid.Column="2" Text="HTML" Command="{Binding TransformCommand}" 
+                        BackgroundColor="#0056b3" TextColor="White" Padding="0" CornerRadius="5"/>
+
+                <Button Grid.Column="3" Text="Вихід" Command="{Binding ExitCommand}" 
+                        BackgroundColor="#0056b3" TextColor="White" Padding="0" CornerRadius="5"/>
+
+            </Grid>
+
+            <BoxView HeightRequest="1" Color="Gray" Margin="0,5" Opacity="0.5"/>
+            <Label Text="Результати:" FontAttributes="Bold" FontSize="16"/>
+        </VerticalStackLayout>
+
+        <CollectionView Grid.Row="1" ItemsSource="{Binding Results}">
+            <CollectionView.ItemTemplate>
+                <DataTemplate>
+                    <Frame Padding="10" Margin="0,0,0,8" BorderColor="Gray" CornerRadius="8" HasShadow="True">
+                        <Grid ColumnDefinitions="*, Auto">
+                            <VerticalStackLayout Grid.Column="0" Spacing="2">
+                                <Label Text="{Binding Name}" FontAttributes="Bold" FontSize="16"/>
+                                <Label Text="{Binding DisplayInfo}" FontSize="13" TextColor="Gray"/>
+                            </VerticalStackLayout>
+                            <Label Grid.Column="1" Text="{Binding Phone}" VerticalOptions="Center" TextColor="#0056b3" FontAttributes="Bold"/>
+                        </Grid>
+                    </Frame>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+            <CollectionView.EmptyView>
+                <VerticalStackLayout VerticalOptions="Center" HorizontalOptions="Center">
+                    <Label Text="📭" FontSize="30" HorizontalOptions="Center"/>
+                    <Label Text="Список порожній" TextColor="Gray" HorizontalOptions="Center"/>
+                </VerticalStackLayout>
+            </CollectionView.EmptyView>
+        </CollectionView>
+
+        <Label Grid.Row="2" 
+               Text="{Binding StatusMessage}" 
+               TextColor="{Binding StatusColor}"
+               FontAttributes="Bold"
+               HorizontalOptions="Center"
+               HorizontalTextAlignment="Center"/>
+
+    </Grid>
+</ContentPage>

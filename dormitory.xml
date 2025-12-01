@@ -1,0 +1,17 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Dormitory University="KNU Taras Shevchenko" DormNumber="16">
+	<Student Name="Петров Петро Петрович" Faculty="ФіТ" Department="ІТ" Course="4" Room="234" Phone="0669014985" />
+	<Student Name="Сидоренко Олексій Павлович" Faculty="Мехмат" Department="Алгебри" Course="4" Room="512" Phone="0631112233" />
+	<Student Name="Бондар Тарас Сергійович" Faculty="ФКНК" Department="ТТП" Course="3" Room="405" Phone="0987778899" />
+	<Student Name="Литвиненко Андрій Вікторович" Faculty="ФІТ" Department="Програмної інженерії" Course="2" Room="714" Phone="0675551234" />
+	<Student Name="Костюк Павло Сергійович" Faculty="ФІТ" Department="Кібербезпеки" Course="1" Room="715" Phone="0934449876" />
+	<Student Name="Павленко Арсен Дмитрович" Faculty="ФІТ" Department="Мережевих технологій" Course="4" Room="720" Phone="0501112299" />
+	<Student Name="Демченко Вікторія Олегівна" Faculty="Мехмат" Department="Мат. аналізу" Course="3" Room="509" Phone="0667773344" />
+	<Student Name="Мельничук Софія Андріївна" Faculty="Мехмат" Department="Теорії ймовірностей" Course="5" Room="520" Phone="0998881122" />
+	<Student Name="Мартиненко Аліна Юріївна" Faculty="Мехмат" Department="Геометрії" Course="1" Room="501" Phone="0639990011" />
+	<Student Name="Савченко Ірина Володимирівна" Faculty="ФКНК" Department="Системного аналізу" Course="2" Room="304" Phone="0682223355" />
+	<Student Name="Яковенко Юлія Олександрівна" Faculty="ФКНК" Department="Штучного інтелекту" Course="4" Room="312" Phone="0954446677" />
+	<Student Name="Ткачук Богдан Миколайович" Faculty="ФРЕКС" Department="Наноелектроніки" Course="6" Room="205" Phone="0731239876" />
+	<Student Name="Остапенко Дмитро Ігорович" Faculty="ФРЕКС" Department="Квантової радіофізики" Course="3" Room="218" Phone="0961115599" />
+	<Student Name="Шевченко Ольга Дмитрівна" Faculty="ФіТ" Department="" Course="2" Room="101" Phone="0661114455" />
+</Dormitory>
