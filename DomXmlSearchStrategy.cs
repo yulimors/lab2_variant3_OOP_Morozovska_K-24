@@ -38,7 +38,10 @@ namespace Lab2Xml.Services
                     }
                 }
             }
-            catch { /* Обробка помилок */ }
+            catch 
+            {
+            
+            }
 
             return results;
         }
@@ -51,4 +54,5 @@ namespace Lab2Xml.Services
             return true;
         }
     }
+
 }
